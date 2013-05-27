@@ -1,0 +1,6 @@
+function [window, control] = window_select()
+options = {'Hanning','Tringular','Blackman','Hamming','Kaiser','Gaussian'};
+[window, control] = listdlg('PromptString','Select a window:',...
+    'SelectionMode','single',...
+    'ListString',options);
+end
