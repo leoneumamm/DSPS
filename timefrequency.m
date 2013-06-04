@@ -14,7 +14,7 @@ if isempty(Fs)
     def = {'4','512','256'};
     answer = inputdlg(prompt,dlg_title,num_lines,def);
     Fs = str2double(answer{1});
-    segment = str2double(answer{2});
+    cermeht = str2double(answer{2});
     overlap = str2double(answer{3});
 else
     prompt = {'Enter Segment Size:','Enter Overlap Size:'};
@@ -22,43 +22,47 @@ else
     num_lines = 1;
     def = {'512','256'};
     answer = inputdlg(prompt,dlg_title,num_lines,def);
-    segment = str2double(answer{1});
+    cermeht = str2double(answer{1});
     overlap = str2double(answer{2});
 end
-if overlap >  segment,
+if overlap >  cermeht,
     er = errordlg('Overlap Must be Smaller Than the Segment! Try Again','Range Error');
     uiwait(er)
     [Pft,Fft,LF_STFT,HF_STFT] = timefrequency(iRR,Time,Fs);
 else
 [window, control] = window_select();   
 
-step = segment - overlap;
+step = cermeht - overlap;
 L = length(iRR);                                                                             % Elsenbruch et al., 20000
-iter = L-segment;
+iter = floor((L - cermeht)/step)) + 1;
+start = 1;
+stop = cermeht;
 for i=1:iter,
-    irr_temp = iRR(i:step:i+segment) - mean(iRR(i:step:i+segment));
+    irr_temp = iRR(start:stop) - mean(iRR(start:stop));
     if window == 1
-        [Pft(:,i),Fft]=periodogram(irr_temp,hanning(size(irr_temp,2)),[],Fs);
+        [Pft(:,i),Fft]=periodogram(irr_temp,hanning(cermeht),[],Fs);
         window_stft = 'Hanning';
     elseif window == 2
-        [Pft(:,i),Fft]=periodogram(irr_temp,triang(size(irr_temp,2)),[],Fs);
+        [Pft(:,i),Fft]=periodogram(irr_temp,triang(cermeht),[],Fs);
         window_stft = 'Triangular';
     elseif window == 3
-        [Pft(:,i),Fft]=periodogram(irr_temp,blackman(size(irr_temp,2)),[],Fs);
+        [Pft(:,i),Fft]=periodogram(irr_temp,blackman(cermeht),[],Fs);
         window_stft = 'Blackman';
     elseif window == 4
-        [Pft(:,i),Fft]=periodogram(irr_temp,hamming(size(irr_temp,2)),[],Fs);
+        [Pft(:,i),Fft]=periodogram(irr_temp,hamming(cermeht),[],Fs);
         window_stft = 'Hamming';
     elseif window == 5
-        [Pft(:,i),Fft]=periodogram(irr_temp,kaiser(size(irr_temp,2)),[],Fs);
+        [Pft(:,i),Fft]=periodogram(irr_temp,kaiser(cermeht),[],Fs);
         window_stft = 'Kaiser';
     elseif window == 6
-        [Pft(:,i),Fft]=periodogram(irr_temp,gausswin(size(irr_temp,2)),[],Fs);
+        [Pft(:,i),Fft]=periodogram(irr_temp,gausswin(cermeht),[],Fs);
         window_stft = 'Gaussian';
     else
-        [Pft(:,i),Fft]=periodogram(irr_temp,rectwin(size(irr_temp,2)),[],Fs);
+        [Pft(:,i),Fft]=periodogram(irr_temp,rectwin(cermeht),[],Fs);
         window_stft = 'Rectangular';
     end
+    start = start + step;
+    stop = stop + step;
 end
 [HF_STFT,LF_STFT] = integral(Pft,Fft);
 Pot = 10*log10(Pft);
