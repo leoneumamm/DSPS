@@ -51,8 +51,4 @@ if N > 1
     bsf2 = uicontrol('String','Save','Callback',['[filesf, pathsf] =',...
         'uiputfile({''*.png'';''*.tif'';''*.pdf'';''*.*''},''Save Figure Dialog'',''Figure_1'');',...
         'saveas(fsf,[pathsf,filesf]);'],'position',[132,15,120,20]);
-<<<<<<< HEAD
- end
-=======
- end
->>>>>>> a4246c034565407677c5d0f26b37f4f7cb4902ec
+end
