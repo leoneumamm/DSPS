@@ -60,7 +60,7 @@ else
     [window, control] = window_select();
 
     step = segment - overlap;
-    L = length(iRR);                                                                             % Elsenbruch et al., 20000
+    L = length(iRR);                                                                             % Elsenbruch et al., 2000
     iter = floor((L-segment)/step) + 1;
     start = 1;
     stop = segment;
