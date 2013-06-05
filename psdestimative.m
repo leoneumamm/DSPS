@@ -65,26 +65,26 @@ P = fix((length(iRR) - segment)/step) + 1;
 if control ~= 0,
     switch window
         case 1
-            [Pxx,F] = pwelch(iRR,eval('hanning(segment)'),overlap,[],Fs);
+            [Pxx,F] = pwelch(iRR,hanning(segment),overlap,[],Fs);
             window_w = 'Hanning';
         case 3
-            [Pxx,F] = pwelch(iRR,eval('blackman(segment)'),overlap,[],Fs);
+            [Pxx,F] = pwelch(iRR,blackman(segment),overlap,[],Fs);
             window_w = 'Blackman';
         case 4
-            [Pxx,F] = pwelch(iRR,eval('hamming(segment)'),overlap,[],Fs);
+            [Pxx,F] = pwelch(iRR,hamming(segment),overlap,[],Fs);
             window_w = 'Hamming';
         case 2
-            [Pxx,F] = pwelch(iRR,eval('triang(segment)'),overlap,[],Fs);
+            [Pxx,F] = pwelch(iRR,triang(segment),overlap,[],Fs);
             window_w = 'Triangular';
         case 5
-            [Pxx,F] = pwelch(iRR,eval('kaiser(segment)'),overlap,[],Fs);
+            [Pxx,F] = pwelch(iRR,kaiser(segment),overlap,[],Fs);
             window_w = 'Kaiser';
         case 6
-            [Pxx,F] = pwelch(iRR,eval('gausswin(segment)'),overlap,[],Fs);
+            [Pxx,F] = pwelch(iRR,gausswin(segment),overlap,[],Fs);
             window_w = 'Gaussian';
         end
     else
-        [Pxx,F] = pwelch(iRR,eval('rectwin(segment)'),overlap,[],Fs);
+        [Pxx,F] = pwelch(iRR,rectwin(segment),overlap,[],Fs);
         window_w = 'Rectangular';
     end
 
