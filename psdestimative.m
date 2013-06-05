@@ -10,7 +10,7 @@ LFnu = 0;
 HFnu = 0;
 LF_HF = 0;
 TotalPower = 0;
-window = 0;
+window_w= 0;
 bands = 0;
 segment = 0;
 overlap = 0;
@@ -82,7 +82,7 @@ if control ~= 0,
         case 6
             [Pxx,F] = pwelch(iRR,gausswin(segment),overlap,[],Fs);
             window_w = 'Gaussian';
-        end
+    end
     else
         [Pxx,F] = pwelch(iRR,rectwin(segment),overlap,[],Fs);
         window_w = 'Rectangular';
