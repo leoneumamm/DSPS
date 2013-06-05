@@ -83,9 +83,3 @@ bsf2 = uicontrol('String','Save','Callback',['gopt = options(get(lsf,''Value''))
     'title(''Short-Time Auto Regressive'');end;[filesf, pathsf] =',...
     'uiputfile({''*.png'';''*.tif'';''*.pdf'';''*.*''},''Save Figure Dialog'',',...
     '''Figure_1.png'');saveas(fsf,[pathsf,filesf]);'],'position',[132,15,120,20]);
-
-
-
-
-
-
