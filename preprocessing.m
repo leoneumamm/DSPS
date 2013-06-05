@@ -1,6 +1,6 @@
 function [Tx,iRRx,Fs] = preprocessing(iRR,Time)
 
-Fs = 0
+Fs = 0;
 prompt = {'Re-sample Frequency:'};
 dlg_title = 'Pre Processing';
 num_lines = 1;
