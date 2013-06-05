@@ -7,7 +7,7 @@ if abs(time_test1 - time_test2) > 10e-3;
     uiwait(er)
     [Time,iRR,Fs] = preprocessing(iRR,Time);
 end
-    
+
 if isempty(Fs)
     prompt = {'Sampling Frequency','Model Order','Enter Segment Size:','Enter Overlap Size:'};
     dlg_title = 'STAR Parameters';
@@ -30,7 +30,7 @@ if isempty(Fs)
         overlap = str2double(answer{4});
     end
 else
-    
+
     prompt = {'Model Order','Enter Segment Size:','Enter Overlap Size:'};
     dlg_title = 'STAR Parameters';
     num_lines = 1;
@@ -50,7 +50,7 @@ else
         segment = str2double(answer{2});
         overlap = str2double(answer{3});
     end
-    
+
 end
 if overlap >  segment,
     er = errordlg('Overlap Must be Smaller Than the Segment! Try Again','Range Error');
@@ -58,7 +58,7 @@ if overlap >  segment,
     [Pft,Fft,LF_STFT,HF_STFT] = timefrequencyar(iRR,Time,Fs);
 else
     [window, control] = window_select();
-    
+
     step = segment - overlap;
     L = length(iRR);                                                                             % Elsenbruch et al., 20000
     iter = floor((L-segment)/step) + 1;

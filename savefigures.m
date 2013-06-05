@@ -30,7 +30,7 @@ if exist('Pxx','var')
 end
 
 if exist('RMSSDj','var')
-    options{N} = 'Time Varying';
+    options{N} = 'Time-Varying';
     varc{N} = 'RMSSDj';
     N=N+1;
     varc{N} = 'pNN50j';
@@ -75,26 +75,38 @@ if N > 2
         [200,130,70,40]);
     bsf1 = uicontrol('Position',[10,15,120,20],'String', 'Preview',...
         'CallBack','set(fsf,''Visible'',''off'')');
-        
+
         % TODO: solve problem of sorted index array.
-        
-     switch get(lsf,'Value')
-        case 1
+
+     switch options{get(lsf,'Value')}
+        case 'Welch-Periodogram'
             fsf = figure();
-            plot(F,Pxx);
+            plot(F_AR,Pxx_AR);
             set(fsf,'Visible','off')
-        case 2
-            fsf = plot(F_AR,Pxx_AR);
+        case 'AR-Periodogram'
+            fsf = figure();
+            plot(F_AR,Pxx_AR);
             set(fsf,'Visible','off')
-        case 3
-            fsf = plot(Index,RMSSDj);
+        case 'Time-Varying'
+            fsf = figure();
+            plot(Index,RMSSDj);
             set(fsf,'Visible','off')
-        case 4
-            fsf = plot(ecg_time, ECG);
+        case 'ECG'
+            fsf = figure();
+            plot(ecg_time, ECG);
             set(fsf,'Visible','off')
-        case 5
-            fsf = plot(Time, iRR);
+        case 'RRi'
+            fsf = figure();
+            plot(Time, iRR);
             set(fsf,'Visible','off')
+        case 'STFT'
+            fsf = figure();
+            imagesc(Time,Fft,Pft)
+            %....
+        case 'STAR'
+            fsf = figure();
+            imagesc(Time, Fft_AR,Pft_AR)
+        end
     end
     bsf2 = uicontrol('String','Save','Callback',['[filesf, pathsf] =',...
         'uiputfile({''*.png'';''*.tif'';''*.pdf'';''*.*''},''Save Figure Dialog'',''Figure_1'');',...

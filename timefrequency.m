@@ -30,7 +30,7 @@ if overlap >  segment,
     uiwait(er)
     [Pft,Fft,LF_STFT,HF_STFT] = timefrequency(iRR,Time,Fs);
 else
-[window, control] = window_select();   
+[window, control] = window_select();
 
 step = segment - overlap;
 L = length(iRR);                                                                             % Elsenbruch et al., 20000
