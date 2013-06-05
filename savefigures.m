@@ -2,53 +2,28 @@ options = {};
 N = 1;
 if exist('Pxx_AR','var')
     options{N} = 'AR-Periodogram';
-    varc{N} = 'Pxx_AR';
-    N=N+1;
-    varc{N} = 'F_AR';
     N = N + 1;
 end
 if exist('ECG','var')
     options{N} = 'ECG';
-    varc{N} = 'ecg_time';
-    N = N+1;
-    varc{N} = 'ECG';
-    N = N + 1;
-end
+    N=N+1;
+ end
 if exist('iRR','var')
     options{N} = 'RRi';
-    varc{N} = 'iRR';
-    N = N + 1;
-    varc{N} = 'Time';
     N = N + 1;
 end
 if exist('Pxx','var')
     options{N} = 'Welch-Periodogram';
-    varc{N} = 'Pxx';
-    N=N+1;
-    varc{N} = 'F';
     N = N + 1;
 end
 
 if exist('RMSSDj','var')
     options{N} = 'Time-Varying';
-    varc{N} = 'RMSSDj';
-    N=N+1;
-    varc{N} = 'pNN50j';
-    N=N+1;
-    varc{N} = 'SDNNj';
-    N=N+1;
-    varc{N} = 'averagej';
-    N=N+1;
-    varc{N} = 'Index';
     N = N + 1;
 end
 
-
-if exist('STFT','var')
+if exist('Pft','var')
     options{N} = 'STFT';
-    varc{N} = 'Pft';
-    N=N+1;
-    varc{N} = 'Fft';
     N = N + 1;
 end
 if exist('STAR','var')
@@ -73,41 +48,32 @@ if N > 2
         [200,160,70,40]);
     p3sv = uicontrol('Style','pop','String',dpilist,'position',...
         [200,130,70,40]);
+   
     bsf1 = uicontrol('Position',[10,15,120,20],'String', 'Preview',...
-        'CallBack','set(fsf,''Visible'',''off'')');
-    
-    % TODO: solve problem of sorted index array.
-    
-    switch options{get(lsf,'Value')}
-        case 'Welch-Periodogram'
-            fsf = figure();
-            plot(F_AR,Pxx_AR);
-            set(fsf,'Visible','off')
-        case 'AR-Periodogram'
-            fsf = figure();
-            plot(F_AR,Pxx_AR);
-            set(fsf,'Visible','off')
-        case 'Time-Varying'
-            fsf = figure();
-            plot(Index,RMSSDj);
-            set(fsf,'Visible','off')
-        case 'ECG'
-            fsf = figure();
-            plot(ecg_time, ECG);
-            set(fsf,'Visible','off')
-        case 'RRi'
-            fsf = figure();
-            plot(Time, iRR);
-            set(fsf,'Visible','off')
-        case 'STFT'
-            fsf = figure();
-            imagesc(Time,Fft,Pft)
-            %....
-        case 'STAR'
-            fsf = figure();
-            imagesc(Time, Fft_AR,Pft_AR)
-    end
+        'CallBack',['gopt = options(get(lsf,''Value''));fsf=figure();',...
+        'if strcmp(gopt,''Welch-Periodogram'');plot(F,Pxx);xlabel(''Frequency (Hz)'');',...
+        'ylabel(''PSD (ms^2/Hz)'');title(''Power Spectral Density Estimative',...
+        ' via Modified Periodogram'');elseif strcmp(gopt,''RRi'');plot(Time,iRR);',...
+        'xlabel(''Time (s)'');ylabel(''RRi (ms)''); title(''Tachogram'');',...
+        'axis(''tight'');elseif strcmp(gopt,''AR-Periodogram'');',...
+        'plot(F_AR,Pxx_AR);xlabel(''Frequency (Hz)'');ylabel(''PSD (s^2/Hz)'');',...
+        'title(''Power Spectral Density Estimative via Auto Regressive Method'');',...
+        'elseif strcmp(gopt,''ECG''); plot(time_ecg,ECG);xlabel(''Time (s)'');',...
+        'ylabel(''V''); title(''Electrocardiogram'');elseif strcmp(gopt,''STFT'');',...
+        'imagesc(Time,Fft,Pft);xlabel(''Time (s)'');ylabel(''Frequency (Hz)'');',...
+        'title(''Short-Time Fourier Transform'');elseif strcmp(gopt,''STAR'');',...
+        'imagesc(Time,Fft_AR,Pft_AR);xlabel(''Time (s)'');ylabel(''Frequency (Hz)'');',...
+        'title(''Short-Time Auto Regressive'');end']);
 end
-bsf2 = uicontrol('String','Save','Callback',['[filesf, pathsf] =',...
-    'uiputfile({''*.png'';''*.tif'';''*.pdf'';''*.*''},''Save Figure Dialog'',''Figure_1'');',...
-    'saveas(fsf,[pathsf,filesf]);'],'position',[132,15,120,20]);
+
+%Create elseif's for all plots with visible off to save without preview.
+
+bsf2 = uicontrol('String','Save','Callback',['if exist(''fsf'',''var'');[filesf, pathsf] =',...
+    'uiputfile({''*.png'';''*.tif'';''*.pdf'';''*.*''},''Save Figure Dialog'',',...
+    '''Figure_1.png'');saveas(fsf,[pathsf,filesf]);end;'],'position',[132,15,120,20]);
+
+
+
+
+
+
