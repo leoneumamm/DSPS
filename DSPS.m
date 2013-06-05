@@ -27,7 +27,7 @@ set(fid,'DeleteFcn','clear all')
 %Logo Icon
 ax = axes;
 set(ax,'pos',[0.86,0.01,0.13,0.15])
-im = imread('PEB.jpg');
+im = imread('logoPEB.png');
 image(im)
 set(ax,'visible','off')
 
@@ -39,11 +39,14 @@ st = uicontrol('Style','text','Position',[0.1,10,150,15],...
 ax1 = axes;
 set(ax1,'pos',[0.1500, 0.600, 0.7, 0.35]);
 ax2 = axes;
-set(ax2,'pos',[0.1500, 0.150, 0.7, 0.35]);
+set(ax2,'pos',[0.1500, 0.150, 0.5, 0.35]);
 
 % Main Menu for File Handle.
 menuid = uimenu;
 set(menuid,'Label','File')
+
+%Table for results
+rt = uicontrol('Style','Text','String','Results','Position',[600,120,280,230]);
 
 % Menu for Open iRR.
 menuid_open_irr = uimenu(menuid);
@@ -185,9 +188,9 @@ menuid_plot_periodogram = uimenu(menuid_plots,'Label',...
     'xlabel(''Frequency (Hz)'');ylabel(''PSD (ms²/Hz)'');', ...
     'title(''Power Spectral Density Function'')']);
 
-%Uitable Creation
-table = uitable('Position',[150,10,600,60],'ColumnFormat',...
-    {'Numeric'});
+% %Uitable Creation
+% table = uitable('Position',[150,10,600,60],'ColumnFormat',...
+%     {'Numeric'});
 
 % Cut Signal
 menuid_cut = uimenu('Label','Select Range','Enable','off');
