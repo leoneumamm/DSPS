@@ -75,10 +75,10 @@ if N > 2
         [200,130,70,40]);
     bsf1 = uicontrol('Position',[10,15,120,20],'String', 'Preview',...
         'CallBack','set(fsf,''Visible'',''off'')');
-
-        % TODO: solve problem of sorted index array.
-
-     switch options{get(lsf,'Value')}
+    
+    % TODO: solve problem of sorted index array.
+    
+    switch options{get(lsf,'Value')}
         case 'Welch-Periodogram'
             fsf = figure();
             plot(F_AR,Pxx_AR);
@@ -106,9 +106,8 @@ if N > 2
         case 'STAR'
             fsf = figure();
             imagesc(Time, Fft_AR,Pft_AR)
-        end
     end
-    bsf2 = uicontrol('String','Save','Callback',['[filesf, pathsf] =',...
-        'uiputfile({''*.png'';''*.tif'';''*.pdf'';''*.*''},''Save Figure Dialog'',''Figure_1'');',...
-        'saveas(fsf,[pathsf,filesf]);'],'position',[132,15,120,20]);
 end
+bsf2 = uicontrol('String','Save','Callback',['[filesf, pathsf] =',...
+    'uiputfile({''*.png'';''*.tif'';''*.pdf'';''*.*''},''Save Figure Dialog'',''Figure_1'');',...
+    'saveas(fsf,[pathsf,filesf]);'],'position',[132,15,120,20]);
