@@ -1,6 +1,8 @@
-prompt = {'Enter File Name:'};
-dlg_title = 'Save Dialog';
-num_lines = 1;
-def = {'.txt'};
-Name = inputdlg(prompt,dlg_title,num_lines,def);
-save(Name{1}, 'iRR', '-ASCII');
+function savefile_irr(iRR)
+[File,Path] = uiputfile('*.txt','Save RRi Dialog');
+fRRi = fopen([Path,File],'w');
+for iter = iRR
+    fprintf(fRRi,'%e\r\n',iter);
+end
+fclose(fRRi);
+end
