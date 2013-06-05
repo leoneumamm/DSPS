@@ -2,6 +2,14 @@ function [Par,Far,LF_STAR,HF_STAR,iRR,Time,Fs,window_star,segment,overlap] = tim
 time_test1 = Time(3) - Time(2);
 time_test2 = Time(2) - Time(1);
 
+Par=0;
+Far=0;
+LF_STAR=0;
+HF_STAR=0;
+window_star=0;
+segment=0;
+overlap=0;
+        
 if abs(time_test1 - time_test2) > 10e-3;
     er = errordlg('Data are not Even Spaced. Please Re-sample','Error','modal');
     uiwait(er)
@@ -15,13 +23,6 @@ if isempty(Fs)
     def = {'4','14','512','256'};
     answer = inputdlg(prompt,dlg_title,num_lines,def);
     if isempty(cellfun(@isempty,answer))
-        Par=0;
-        Far=0;
-        LF_STAR=0;
-        HF_STAR=0;
-        window_star=0;
-        segment=0;
-        overlap=0;
         return
     else
         Fs = str2double(answer{1});
@@ -37,13 +38,6 @@ else
     def = {'14','512','256'};
     answer = inputdlg(prompt,dlg_title,num_lines,def);
     if isempty(cellfun(@isempty,answer))
-        Par=0;
-        Far=0;
-        LF_STAR=0;
-        HF_STAR=0;
-        window_star=0;
-        segment=0;
-        overlap=0;
         return
     else
         order = str2double(answer{1});
