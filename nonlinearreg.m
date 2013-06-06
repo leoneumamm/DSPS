@@ -1,6 +1,6 @@
-function [Coeff] = nonlinearreg(Time,iRR,ax)
+function Coeff = nonlinearreg(Time,iRR,ax)
 FC = 60./(iRR/1000);
-p0 = [min(FC),max(FC) - min(FC),Time(find(Time >= .36*max(FC),1))];
+p0 = [min(FC),max(FC) - min(FC),Time(find(FC >= .36*max(FC),1))];
 model = @(par,t) par(1) + par(2).*exp(-t/par(3));
 Coeff = nlinfit(Time,FC,model,p0);
 Curve = model(Coeff,Time);
