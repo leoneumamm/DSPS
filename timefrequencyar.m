@@ -2,14 +2,6 @@ function [Par,Far,LF_STAR,HF_STAR,iRR,Time,Fs,window_star,segment,overlap] = tim
 time_test1 = Time(3) - Time(2);
 time_test2 = Time(2) - Time(1);
 
-Par=0;
-Far=0;
-LF_STAR=0;
-HF_STAR=0;
-window_star=0;
-segment=0;
-overlap=0;
-        
 if abs(time_test1 - time_test2) > 10e-3;
     er = errordlg('Data are not Even Spaced. Please Re-sample','Error','modal');
     uiwait(er)
@@ -23,6 +15,13 @@ if isempty(Fs)
     def = {'4','14','512','256'};
     answer = inputdlg(prompt,dlg_title,num_lines,def);
     if isempty(cellfun(@isempty,answer))
+        Par=0;
+        Far=0;
+        LF_STAR=0;
+        HF_STAR=0;
+        window_star=0;
+        segment=0;
+        overlap=0;
         return
     else
         Fs = str2double(answer{1});
@@ -31,28 +30,35 @@ if isempty(Fs)
         overlap = str2double(answer{4});
     end
 else
-
+    
     prompt = {'Model Order','Enter Segment Size:','Enter Overlap Size:'};
     dlg_title = 'STAR Parameters';
     num_lines = 1;
     def = {'14','512','256'};
     answer = inputdlg(prompt,dlg_title,num_lines,def);
     if isempty(cellfun(@isempty,answer))
+        Par=0;
+        Far=0;
+        LF_STAR=0;
+        HF_STAR=0;
+        window_star=0;
+        segment=0;
+        overlap=0;
         return
     else
         order = str2double(answer{1});
         segment = str2double(answer{2});
         overlap = str2double(answer{3});
     end
-
+    
 end
 if overlap >  segment,
     er = errordlg('Overlap Must be Smaller Than the Segment! Try Again','Range Error');
     uiwait(er)
-    [Pft,Fft,LF_STFT,HF_STFT] = timefrequencyar(iRR,Time,Fs);
+    [Pft,Fft,LF_STFT,HF_STFT] = timefrequencyar(iRR,Time,Fs,ax);
 else
     [window, control] = window_select();
-
+    
     step = segment - overlap;
     L = length(iRR);                                                                             % Elsenbruch et al., 2000
     iter = floor((L-segment)/step) + 1;
@@ -105,3 +111,4 @@ else
     ylabel('Frequency (Hz)')
     window_star = 'Verificar';
 end
+%TODO: Zero-Padding.
