@@ -1,13 +1,13 @@
 function [SD1T, SD2T] = poinc1(data,rmssd,sdnn)
 if nargin < 3,
-    rmssd = rms(diff(data));
+    rmssd = sqrt(sum(diff(data).*(diff(data)))/size(diff(data),1));
     sdnn = std(data);
 else
 end
 SD1T=sqrt((rmssd^2)/2);
 SD2T=sqrt((2*sdnn^2)-SD1T);
 % plot(data(1:end - 1),data(2:end),'k.')
-% title('Poincaré Plot');
+% title('Poincarï¿½ Plot');
 % xlabel('RRi+1(ms)');
 % ylabel('RRi(ms)')
 
