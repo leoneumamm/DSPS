@@ -17,18 +17,18 @@ P = fix((Time(end) - segment)/forward + 1); % Number of iteration based on
                                             % segment and overlap.
 
 for iter = 1:P
-    
+
     iRR_temp = iRR(find(Time >= start,1):find(Time >= stop,1));
-    RMSSD(iter) = rms(diff(iRR_temp));
+    RMSSD(iter) = rootms(diff(iRR_temp));
     pNN50_control = gradient(iRR_temp) >= 50;
     pNN50(iter) = (sum(pNN50_control)/length(iRR_temp))*100;
     SDNN(iter) = std(iRR_temp);
     average(iter) = mean(iRR_temp);
-    
+
     Index(iter) = start;
     start = start + forward;
     stop = stop + forward;
-    
+
 end
 Index = Index + Time_min;
 end
