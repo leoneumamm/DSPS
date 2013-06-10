@@ -1,4 +1,5 @@
-function [Pft,Fft,LF_STFT,HF_STFT,iRR,Time,Fs,window_stft,segment,overlap] = timefrequency(iRR,Time,Fs,ax)
+function [Pft,Fft,LF_STFT,HF_STFT,iRR,Time,time_stft,Fs,window_stft,segment,...
+    overlap] = timefrequency(iRR,Time,Fs,ax)
 time_test1 = Time(3) - Time(2);
 time_test2 = Time(2) - Time(1);
 if abs(time_test1 - time_test2) > 10e-3;
@@ -8,10 +9,10 @@ if abs(time_test1 - time_test2) > 10e-3;
 end
 
 if isempty(Fs)
-    prompt = {'Sampling Frequency','Enter Segment Size:','Enter Overlap Size:'};
+    prompt = {'Sampling Frequency','Enter Segment Size:','Enter Overlap Size:','Zero-Pading'};
     dlg_title = 'STFT Parameters';
     num_lines = 1;
-    def = {'4','512','256'};
+    def = {'4','512','256','0'};
     answer = inputdlg(prompt,dlg_title,num_lines,def);
     if isempty(cellfun(@isempty,answer))
         Pft=0;
@@ -26,12 +27,13 @@ if isempty(Fs)
         Fs = str2double(answer{1});
         segment = str2double(answer{2});
         overlap = str2double(answer{3});
+        zPc = str2double(answer{4});
     end
 else
-    prompt = {'Enter Segment Size:','Enter Overlap Size:'};
+    prompt = {'Enter Segment Size:','Enter Overlap Size:','Zero-Padding'};
     dlg_title = 'STFT Parameters';
     num_lines = 1;
-    def = {'512','256'};
+    def = {'512','256','0'};
     answer = inputdlg(prompt,dlg_title,num_lines,def);
     if isempty(cellfun(@isempty,answer))
         Pft=0;
@@ -45,15 +47,27 @@ else
     else
         segment = str2double(answer{1});
         overlap = str2double(answer{2});
+        zPc = str2double(answer{3});
     end
 end
 if overlap >  segment,
     er = errordlg('Overlap Must be Smaller Than the Segment! Try Again','Range Error');
     uiwait(er)
-    [Pft,Fft,LF_STFT,HF_STFT] = timefrequency(iRR,Time,Fs);
+    [Pft,Fft,LF_STFT,HF_STFT,iRR,Time,time_stft,Fs,window_stft,segment,...
+    overlap] = timefrequency(iRR,Time,Fs,ax);
 else
     [window, control] = window_select();
-    
+    if zPc== 0
+        zP = [];
+    else
+        zP = zPc;
+    end
+    if zP ~= fix(zP)
+        er = errordlg('Zero-Padding length must be a integer! Try Again','Zero-Padding Error');
+        uiwait(er)
+        [Pft,Fft,LF_STFT,HF_STFT,iRR,Time,time_stft,Fs,window_stft,segment,...
+    overlap] = timefrequency(iRR,Time,Fs,ax);
+    end
     step = segment - overlap;
     L = length(iRR);                                                                             % Elsenbruch et al., 20000
     iter = floor((L-segment)/step) + 1;
@@ -62,22 +76,22 @@ else
     for i=1:iter,
         irr_temp = iRR(STFTt:stop) - mean(iRR(STFTt:stop));
         if window == 1
-            [Pft(:,i),Fft]=periodogram(irr_temp,hanning(size(irr_temp,2)),[],Fs);
+            [Pft(:,i),Fft]=periodogram(irr_temp,hanning(size(irr_temp,2)),zP,Fs);
             window_stft = 'Hanning';
         elseif window == 2
-            [Pft(:,i),Fft]=periodogram(irr_temp,triang(size(irr_temp,2)),[],Fs);
+            [Pft(:,i),Fft]=periodogram(irr_temp,triang(size(irr_temp,2)),zP,Fs);
             window_stft = 'Triangular';
         elseif window == 3
-            [Pft(:,i),Fft]=periodogram(irr_temp,blackman(size(irr_temp,2)),[],Fs);
+            [Pft(:,i),Fft]=periodogram(irr_temp,blackman(size(irr_temp,2)),zP,Fs);
             window_stft = 'Blackman';
         elseif window == 4
-            [Pft(:,i),Fft]=periodogram(irr_temp,hamming(size(irr_temp,2)),[],Fs);
+            [Pft(:,i),Fft]=periodogram(irr_temp,hamming(size(irr_temp,2)),zP,Fs);
             window_stft = 'Hamming';
         elseif window == 5
-            [Pft(:,i),Fft]=periodogram(irr_temp,kaiser(size(irr_temp,2)),[],Fs);
+            [Pft(:,i),Fft]=periodogram(irr_temp,kaiser(size(irr_temp,2)),zP,Fs);
             window_stft = 'Kaiser';
         elseif window == 6
-            [Pft(:,i),Fft]=periodogram(irr_temp,gausswin(size(irr_temp,2)),[],Fs);
+            [Pft(:,i),Fft]=periodogram(irr_temp,gausswin(size(irr_temp,2)),zP,Fs);
             window_stft = 'Gaussian';
         else
             [Pft(:,i),Fft]=periodogram(irr_temp,rectwin(size(irr_temp,2)),[],Fs);
@@ -89,6 +103,7 @@ else
     [HF_STFT,LF_STFT] = integral(Pft,Fft,iter);
     Pot = 10*log10(Pft);
     Pot(Pot < 0) = 0;
+    time_stft = linspace(0,Time(end),iter);
     axes(ax)
     imagesc(Time,Fft,Pot);
     shading interp
