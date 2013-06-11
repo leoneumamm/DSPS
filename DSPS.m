@@ -33,7 +33,7 @@ set(ax,'visible','off')
 
 %Copyrigth
 st = uicontrol('Style','text','Position',[0.1,10,150,15],...
-    'String','Rhenan Bartels Ferreira','BackGroundColor',[0.839,0.91,0.851]);
+    'String','Cardiac Signal Software','BackGroundColor',[0.839,0.91,0.851]);
 
 %Main Axes for Plots
 ax1 = axes;
