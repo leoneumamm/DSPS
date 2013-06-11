@@ -1,4 +1,4 @@
-function iRR = hrvfilter(iRR,filter_type)
+function [iRR,Fs,Time] = hrvfilter(iRR,filter_type,Fs,Time,ax)
 switch filter_type
     case 'Ratio'
         prompt = {'Order'};
@@ -63,6 +63,72 @@ switch filter_type
             signal(iter) = median(signal(iter:order + iter - 1));
         end
         
-        iRR = signal;
+    case 'butter'
+        time_test1 = Time(3) - Time(2);
+        time_test2 = Time(2) - Time(1);
+        if abs(time_test1 - time_test2) > 10e-3;
+            er = errordlg('Data are not Even Spaced. Please Re-sample','Error','modal');
+            uiwait(er)
+            [Time,iRR,Fs] = preprocessing(iRR,Time);
+        end
+        options = {'Low Pass','High Pass','Stop Band','Band Pass'};
+        [filterType, control] = listdlg('PromptString','Select a filter:',...
+            'SelectionMode','single',...
+            'ListString',options);        
+        switch filterType
+            case 1
+                prompt = {'Cutoff Frequency:','Order','Forward/Reverse'};
+                dlg_title = 'Butterworth Parameters';
+                num_lines = 1;
+                def = {'1','4','Y'};
+                answer = inputdlg(prompt,dlg_title,num_lines,def);
+                lC = str2double(answer{1});
+                Order = str2double(answer{2});
+                [B,A] = butter(Order,lC/(2*Fs),'low');
+            case 2
+                prompt = {'Lower Cutoff Frequency:','Order','Forward/Reverse'};
+                dlg_title = 'Butterworth Parameters';
+                num_lines = 1;
+                def = {'0.004','4','Y'};
+                answer = inputdlg(prompt,dlg_title,num_lines,def);
+                uC = str2double(answer{1});
+                Order = str2double(answer{2});
+                [B,A] = butter(Order,uC/(2*Fs),'high');
+            case 3
+                prompt = {'Lower Cutoff Frequency:','Upper Cutoff Frequency:','Order','Forward/Reverse'};
+                dlg_title = 'Butterworth Parameters';
+                num_lines = 1;
+                def = {'0.004','1','4','Y'};
+                answer = inputdlg(prompt,dlg_title,num_lines,def);
+                lC = str2double(answer{1});
+                uC = str2double(answer{2});
+                Order = str2double(answer{3});
+                [B,A] = butter(Order,[lC/(2*Fs),uC/(2*Fs)],'stop');
+            otherwise
+                prompt = {'Lower Cutoff Frequency:','Upper Cutoff Frequency:','Order','Forward/Reverse'};
+                dlg_title = 'Butterworth Parameters';
+                num_lines = 1;
+                def = {'0.004','1','4','Y'};
+                answer = inputdlg(prompt,dlg_title,num_lines,def);
+                lC = str2double(answer{1});
+                uC = str2double(answer{2});
+                Order = str2double(answer{3});
+                [B,A] = butter(Order,[lC/(2*Fs),uC/(2*Fs)],'bandpass');
+        end
+        if isempty(cellfun(@isempty,answer))
+            return
+        end
+        if strcmp(answer{end},'Y') || strcmp(answer{4},'y')
+            signal = filtfilt(B,A,iRR);
+        else
+            signal = filt(B,A,iRR);
+        end
 end
+iRR = signal;
+axes(ax)
+plot(Time,iRR,'k')
+xlabel('Time (s)')
+ylabel('RRi (ms)')
+title('Tachgram')
+axis tight
 end
