@@ -84,7 +84,7 @@ switch filter_type
                 answer = inputdlg(prompt,dlg_title,num_lines,def);
                 lC = str2double(answer{1});
                 Order = str2double(answer{2});
-                [B,A] = butter(Order,lC/(2*Fs),'low');
+                [B,A] = butter(Order,2*lC/Fs,'low');
             case 2
                 prompt = {'Lower Cutoff Frequency:','Order','Forward/Reverse'};
                 dlg_title = 'Butterworth Parameters';
@@ -93,7 +93,7 @@ switch filter_type
                 answer = inputdlg(prompt,dlg_title,num_lines,def);
                 uC = str2double(answer{1});
                 Order = str2double(answer{2});
-                [B,A] = butter(Order,uC/(2*Fs),'high');
+                [B,A] = butter(Order,2*uC/Fs,'high');
             case 3
                 prompt = {'Lower Cutoff Frequency:','Upper Cutoff Frequency:','Order','Forward/Reverse'};
                 dlg_title = 'Butterworth Parameters';
@@ -103,7 +103,7 @@ switch filter_type
                 lC = str2double(answer{1});
                 uC = str2double(answer{2});
                 Order = str2double(answer{3});
-                [B,A] = butter(Order,[lC/(2*Fs),uC/(2*Fs)],'stop');
+                [B,A] = butter(Order,[2*lC/Fs,2*uC/Fs],'stop');
             otherwise
                 prompt = {'Lower Cutoff Frequency:','Upper Cutoff Frequency:','Order','Forward/Reverse'};
                 dlg_title = 'Butterworth Parameters';
@@ -113,7 +113,7 @@ switch filter_type
                 lC = str2double(answer{1});
                 uC = str2double(answer{2});
                 Order = str2double(answer{3});
-                [B,A] = butter(Order,[lC/(2*Fs),uC/(2*Fs)],'bandpass');
+                [B,A] = butter(Order,[2*lC/Fs,2*uC/Fs],'bandpass');
         end
         if isempty(cellfun(@isempty,answer))
             return
