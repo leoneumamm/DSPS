@@ -1,12 +1,12 @@
 %-------------------------------------------------------------------------------
-% Name:        Untitled
+% Name:        Cardiac Signal Software
 % Purpose:     Friendly Software for Heart Rate Variabilty Analysis
 %
 % Author:      Rhenan Bartels Ferreira
 %
 % Created:     25/03/2013
 % Copyright:   (c) Rhenan 2013
-% Licence:     <your licence>
+% License:     <your license>
 %-------------------------------------------------------------------------------
 %!/usr/bin/env Matlab
 
@@ -33,7 +33,7 @@ set(ax,'visible','off')
 
 %Copyrigth
 st = uicontrol('Style','text','Position',[0.1,10,150,15],...
-    'String','Cardiaca Signal Software','BackGroundColor',[0.839,0.91,0.851]);
+    'String','Cardiac Signal Software','BackGroundColor',[0.839,0.91,0.851]);
 
 %Main Axes for Plots
 ax1 = axes;
